@@ -12,8 +12,4 @@ public class PetService {
         this.petRepository = petRepository;
     }
 
-    public Pet addPet(Pet pet) {
-        // 비즈니스 로직 추가 가능 (예: 유효성 검사, 로깅 등)
-        return petRepository.save(pet); // 데이터베이스에 저장
-    }
 }

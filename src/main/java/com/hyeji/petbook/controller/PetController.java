@@ -3,10 +3,8 @@ package com.hyeji.petbook.controller;
 import com.hyeji.petbook.dto.PetDTO;
 import com.hyeji.petbook.entity.Pet;
 import com.hyeji.petbook.repository.PetRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,8 +12,11 @@ import java.util.Optional;
 @RequestMapping("/api/pets")
 public class PetController {
 
-    @Autowired
-    private PetRepository petRepository;
+    private final PetRepository petRepository;
+
+    public PetController(PetRepository petRepository) {
+        this.petRepository = petRepository;
+    }
 
     // 반려동물 추가
     @PostMapping("/add-pet")
@@ -66,7 +67,8 @@ public class PetController {
     public String deletePet(@PathVariable(name = "id") Long id) {
         Optional<Pet> optPet = petRepository.findById(id);
         if (!optPet.isPresent()) {
-            return "등록되어 있지 않은 반려동물입니다.";
+//            return "등록되어 있지 않은 반려동물입니다.";
+            throw new IllegalArgumentException("등록되어 있지 않은 반려동물입니다.");
         }
 
         petRepository.delete(optPet.get());
