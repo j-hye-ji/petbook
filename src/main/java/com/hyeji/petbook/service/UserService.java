@@ -39,19 +39,21 @@ public class UserService {
 
     // 로그인
     public String logIn(UserDTO userDTO) {
-        Optional<User> optUser = Optional.ofNullable(userRepository.findByEmail(userDTO.getEmail()));
-        if (!optUser.isPresent()) {
-            return null;
+        Optional<User> optUser = userRepository.findByEmail(userDTO.getEmail());
+
+        if (optUser.isEmpty()) {
+            return "로그인 실패: 이메일 또는 비밀번호가 잘못되었습니다.";  // 이메일이 존재하지 않으면 로그인 실패
         }
 
         User user = optUser.get();
 
-        // 비밀번호는 암호화된 값과 비교해야 함 (예: BCrypt, PBKDF2 등)
-        if (user.getEmail().equals(userDTO.getEmail()) && passwordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
-            // 로그인 성공시 JWT 토큰 생성 및 반환
+        // 비밀번호 비교
+        if (passwordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
+            // 로그인 성공 시 JWT 토큰 생성 및 반환
             return jwtTokenUtil.generateToken(user);  // JWT 토큰 반환
         }
 
-        return "로그인 실패";  // 실패 시 메시지 반환
+        return "로그인 실패: 비밀번호가 잘못되었습니다.";  // 비밀번호 불일치 시 실패 메시지
     }
+
 }

@@ -4,7 +4,6 @@ import com.hyeji.petbook.dto.UserDTO;
 import com.hyeji.petbook.entity.User;
 import com.hyeji.petbook.repository.UserRepository;
 import com.hyeji.petbook.service.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,7 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<String> signUp(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<String> signUp(@RequestBody UserDTO userDTO) {
         String message = userService.signUp(userDTO);
         return ResponseEntity.ok(message);
     }
@@ -31,16 +30,16 @@ public class UserController {
     // 로그인
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserDTO userDTO) {
-        String token = userService.logIn(userDTO);  // 로그인 결과로 토큰을 받는다.
+        String result = userService.logIn(userDTO);  // 로그인 결과 (로그인 성공/실패 메시지 또는 토큰)
 
-        if (token == null) {
+        if (result.startsWith("로그인 실패")) {
             // 로그인 실패 시 Unauthorized 응답을 보낸다.
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("로그인 실패: 이메일 또는 비밀번호가 잘못되었습니다.");
+                    .body(result);  // 로그인 실패 메시지를 응답으로 반환
         }
 
         // 로그인 성공 시 JWT 토큰을 반환
-        return ResponseEntity.ok(token);  // 성공적으로 토큰 반환
+        return ResponseEntity.ok(result);  // 성공적으로 토큰 반환
     }
 
     // 모든 회원 조회
