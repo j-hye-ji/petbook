@@ -21,6 +21,7 @@ public class JwtTokenUtil {
     public String generateToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getEmail()) // 사용자의 이메일을 토큰의 subject로 설정
+                .claim("role", user.getUserRole().name())
                 .setIssuedAt(new Date()) // 토큰 발급 시간
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime)) // 만료 시간
                 .signWith(SignatureAlgorithm.HS512, secretKey) // 서명 알고리즘과 비밀 키
