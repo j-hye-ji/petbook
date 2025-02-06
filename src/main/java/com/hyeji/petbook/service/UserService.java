@@ -3,33 +3,34 @@ package com.hyeji.petbook.service;
 import com.hyeji.petbook.dto.UserDTO;
 import com.hyeji.petbook.entity.User;
 import com.hyeji.petbook.repository.UserRepository;
+import com.hyeji.petbook.type.UserRole;
 import com.hyeji.petbook.util.JwtTokenUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
-
-    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtTokenUtil jwtTokenUtil) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.jwtTokenUtil = jwtTokenUtil;
-    }
 
     // 회원가입
     public String signUp(UserDTO userDTO) {
         String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+
+        // userRole을 클라이언트가 보내지 않으면 USER로 기본 설정
+        UserRole userRole = userDTO.getUserRole() != null ? userDTO.getUserRole() : UserRole.USER;
 
         User user = new User();
         user.setUserName(userDTO.getUserName());
         user.setPassword(encodedPassword);
         user.setEmail(userDTO.getEmail());
         user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setUserRole(userRole);  // 역할 설정
 
         userRepository.save(user);
 

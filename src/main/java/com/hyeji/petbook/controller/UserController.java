@@ -4,27 +4,26 @@ import com.hyeji.petbook.dto.UserDTO;
 import com.hyeji.petbook.entity.User;
 import com.hyeji.petbook.repository.UserRepository;
 import com.hyeji.petbook.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository userRepository;
     private final UserService userService;
-
-    public UserController(UserRepository userRepository, UserService userService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
-    }
+    private final UserRepository userRepository;
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<String> signUp(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> signUp(@RequestBody @Valid UserDTO userDTO) {
         String message = userService.signUp(userDTO);
         return ResponseEntity.ok(message);
     }

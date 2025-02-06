@@ -3,6 +3,7 @@ package com.hyeji.petbook.controller;
 import com.hyeji.petbook.dto.PetDTO;
 import com.hyeji.petbook.entity.Pet;
 import com.hyeji.petbook.repository.PetRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,13 +11,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/pets")
+@RequiredArgsConstructor
 public class PetController {
 
     private final PetRepository petRepository;
-
-    public PetController(PetRepository petRepository) {
-        this.petRepository = petRepository;
-    }
 
     // 반려동물 추가
     @PostMapping("/add-pet")

@@ -1,13 +1,10 @@
 package com.hyeji.petbook.entity;
 
-import com.hyeji.petbook.dto.PetDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -15,7 +12,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Pet {
+@AllArgsConstructor
+public class Pet extends TimeStamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

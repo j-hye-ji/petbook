@@ -10,6 +10,16 @@
 <div class="container">
   <div class="signup-form">
     <h2>회원가입</h2>
+
+    <!-- 역할 선택 바 -->
+    <div class="role-bar">
+      <input type="radio" id="userRole" name="role" value="USER" checked>
+      <label for="userRole">사용자</label>
+
+      <input type="radio" id="adminRole" name="role" value="ADMIN">
+      <label for="adminRole">관리자</label>
+    </div>
+
     <form id="signup-form">
       <div class="input-group">
         <label for="email">이메일</label>
@@ -27,8 +37,10 @@
         <label for="phoneNumber">전화번호 (선택)</label>
         <input type="text" id="phoneNumber" name="phoneNumber" placeholder="전화번호를 입력하세요 (선택)">
       </div>
+
       <button type="submit" class="btn">회원가입</button>
     </form>
+
     <div class="login-link">
       <p>이미 회원이신가요? <a href="/">로그인</a></p>
     </div>
@@ -42,13 +54,15 @@
     const userName = document.getElementById('userName').value;
     const password = document.getElementById('password').value;
     const email = document.getElementById('email').value;
-    const phoneNumber = document.getElementById('phoneNumber').value;  // 선택적으로 전화번호 가져오기
+    const phoneNumber = document.getElementById('phoneNumber').value;
+    const role = document.querySelector('input[name="role"]:checked').value;  // 선택된 역할 값
 
     const userDTO = {
       userName: userName,
       password: password,
       email: email,
-      phoneNumber: phoneNumber  // 선택적 값
+      phoneNumber: phoneNumber,
+      role: role  // 선택된 역할 포함
     };
 
     try {
