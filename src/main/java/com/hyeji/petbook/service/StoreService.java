@@ -6,6 +6,8 @@ import com.hyeji.petbook.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,4 +31,18 @@ public class StoreService {
 
         return store.getStoreName() + " 매장이 등록되었습니다.";
     }
+
+    // 모든 매장 조회
+    public List<Store> getStores() {
+        return storeRepository.findAll();
+    }
+
+    // 매장 이름으로 조회 (부분 검색)
+    public List<Store> getStore(String storeName) {
+        if (storeName != null && !storeName.isEmpty()) {
+            return storeRepository.findByStoreNameContaining(storeName);
+        }
+        return new ArrayList<>();
+    }
+
 }
