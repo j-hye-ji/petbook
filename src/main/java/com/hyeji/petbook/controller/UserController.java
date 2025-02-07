@@ -2,7 +2,6 @@ package com.hyeji.petbook.controller;
 
 import com.hyeji.petbook.dto.UserDTO;
 import com.hyeji.petbook.entity.User;
-import com.hyeji.petbook.repository.UserRepository;
 import com.hyeji.petbook.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
 
     // 회원가입
     @PostMapping("/signup")
@@ -44,8 +42,9 @@ public class UserController {
 
     // 모든 회원 조회
     @GetMapping("/user")
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<List<User>> getUsers() {
+        List<User> users = userService.getUsers();
+        return ResponseEntity.ok(users);
     }
 
 }

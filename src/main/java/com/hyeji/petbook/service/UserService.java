@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,4 +57,8 @@ public class UserService {
         return "로그인 실패: 비밀번호가 잘못되었습니다.";  // 비밀번호 불일치 시 실패 메시지
     }
 
+    // 모든 회원 조회
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
 }
