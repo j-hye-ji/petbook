@@ -1,9 +1,6 @@
 package com.hyeji.petbook.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,4 +19,9 @@ public class Store {
     private String storeName;
     private String location;
     private String description;
+
+    // 관리자와 매장 간의 관계 (Many-to-One)
+    @ManyToOne
+    @JoinColumn(name = "admin_id")
+    private User admin;
 }

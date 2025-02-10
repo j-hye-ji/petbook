@@ -2,14 +2,13 @@ package com.hyeji.petbook.controller;
 
 import com.hyeji.petbook.dto.PetDTO;
 import com.hyeji.petbook.entity.Pet;
-import com.hyeji.petbook.repository.PetRepository;
 import com.hyeji.petbook.service.PetService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/pets")
@@ -17,11 +16,10 @@ import java.util.Optional;
 public class PetController {
 
     private final PetService petService;
-    private final PetRepository petRepository;
 
     // 반려동물 등록
     @PostMapping("/add-pet")
-    public ResponseEntity<String> addPet(@RequestBody PetDTO petDTO) {
+    public ResponseEntity<String> addPet(@RequestBody @Valid PetDTO petDTO) {
         String message = petService.addPet(petDTO);
         return ResponseEntity.ok(message);
     }

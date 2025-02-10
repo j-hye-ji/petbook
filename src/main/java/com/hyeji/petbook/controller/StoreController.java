@@ -1,15 +1,12 @@
 package com.hyeji.petbook.controller;
 
 import com.hyeji.petbook.dto.StoreDTO;
-import com.hyeji.petbook.dto.UserDTO;
 import com.hyeji.petbook.entity.Store;
 import com.hyeji.petbook.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

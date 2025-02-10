@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -17,11 +19,19 @@ public class User extends TimeStamped{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private UserRole userRole = UserRole.USER;
-
     private String userName;
     private String password;
     private String email;
     private String phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole = UserRole.USER;
+
+    // 반려동물과의 관계 (1:N)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pet> pets;
+
+    // 매장과의 관계 (1:N) - 관리자만 매장 등록 가능
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Store> stores;
 }

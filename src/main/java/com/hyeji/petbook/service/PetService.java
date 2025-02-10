@@ -28,7 +28,7 @@ public class PetService {
         pet.setType(petDTO.getType());
         pet.setBreed(petDTO.getBreed());
         pet.setGender(petDTO.getGender());
-        pet.setBirthDate(petDTO.getBirthDate());
+        pet.setBirthday(petDTO.getBirthday());
         pet.setHealthStatus(petDTO.getHealthStatus());
 
         petRepository.save(pet);
@@ -63,8 +63,8 @@ public class PetService {
         if (petDTO.getGender() != null) {
             updatePet.setGender(petDTO.getGender());
         }
-        if (petDTO.getBirthDate() != null) {
-            updatePet.setBirthDate(petDTO.getBirthDate());
+        if (petDTO.getBirthday() != null) {
+            updatePet.setBirthday(petDTO.getBirthday());
         }
         if (petDTO.getHealthStatus() != null) {
             updatePet.setHealthStatus(petDTO.getHealthStatus());

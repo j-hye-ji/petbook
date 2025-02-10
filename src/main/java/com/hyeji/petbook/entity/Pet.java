@@ -1,9 +1,6 @@
 package com.hyeji.petbook.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -13,7 +10,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pet extends TimeStamped{
+public class Pet extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,8 +18,12 @@ public class Pet extends TimeStamped{
     private String petName;
     private String type;
     private String breed;
-    private LocalDate birthDate;
+    private LocalDate birthday;
     private String gender;
     private String healthStatus;
 
+    // 사용자와 반려동물 간의 관계 (Many-to-One)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
