@@ -1,7 +1,9 @@
 package com.hyeji.petbook.controller;
 
 import com.hyeji.petbook.dto.StoreDTO;
+import com.hyeji.petbook.entity.Reservation;
 import com.hyeji.petbook.entity.Store;
+import com.hyeji.petbook.entity.StoreReservationTime;
 import com.hyeji.petbook.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,17 @@ public class StoreController {
 
         String message = storeService.addStore(token, storeDTO);
         return ResponseEntity.ok(message);
+    }
+
+    // 특정 매장의 예약 가능한 시간대 리스트 조회
+    @GetMapping("/{storeId}/reservation-times")
+    public ResponseEntity<List<StoreReservationTime>> getReservationTimes(@PathVariable Long storeId) {
+        try {
+            List<StoreReservationTime> reservationTimes = storeService.getReservationTimes(storeId);
+            return ResponseEntity.ok(reservationTimes);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // 매장이 없을 경우 404 반환
+        }
     }
 
     // 모든 매장 조회
