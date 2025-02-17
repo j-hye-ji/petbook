@@ -39,8 +39,14 @@ public class JwtTokenUtil {
     // JWT 토큰에서 사용자 정보 추출 (이메일 등)
     public String getUsernameFromToken(String token) {
         try {
-            // 공백을 제거한 후 토큰을 파싱
+            // "Bearer " 접두사를 제거하고, 공백을 모두 제거한 후 파싱
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7);  // "Bearer "를 제거하고 토큰만 남김
+            }
+
+            // 공백 제거
             token = token.replaceAll("\\s", "");
+
             return Jwts.parserBuilder()
                     .setSigningKey(getSecretKey())  // 서명 키 설정
                     .build()
