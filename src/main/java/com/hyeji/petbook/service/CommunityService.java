@@ -3,14 +3,16 @@ package com.hyeji.petbook.service;
 import com.hyeji.petbook.dto.PostDTO;
 import com.hyeji.petbook.entity.Post;
 import com.hyeji.petbook.entity.User;
-import com.hyeji.petbook.repository.CommentRepository;
 import com.hyeji.petbook.repository.PostRepository;
 import com.hyeji.petbook.repository.UserRepository;
 import com.hyeji.petbook.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,5 +41,37 @@ public class CommunityService {
     // 모든 게시글 조회
     public List<Post> getAllPosts() {
         return postRepository.findAll();
+    }
+
+    // 게시글 수정
+    public Post updatePost(Long id, PostDTO postDTO) {
+        Optional<Post> optPost = postRepository.findById(id);
+        if (!optPost.isPresent()) {
+            return null;
+        }
+
+        Post updatePost = optPost.get();
+
+        if (updatePost.getTitle() != null) {
+            updatePost.setTitle(postDTO.getTitle());
+        }
+
+        if (updatePost.getContents() != null) {
+            updatePost.setContents(postDTO.getContents());
+        }
+
+        return postRepository.save(updatePost);
+    }
+
+    // 게시글 삭제
+    public boolean deletePost(Long id) {
+        Optional<Post> optPost = postRepository.findById(id);
+        if (!optPost.isPresent()) {
+            return false;
+        }
+
+        postRepository.delete(optPost.get());
+
+        return true;
     }
 }
