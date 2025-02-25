@@ -1,8 +1,6 @@
 package com.hyeji.petbook.controller;
 
-import com.hyeji.petbook.dto.CommentRequestDTO;
 import com.hyeji.petbook.dto.PostDTO;
-import com.hyeji.petbook.entity.Comment;
 import com.hyeji.petbook.entity.Post;
 import com.hyeji.petbook.service.CommunityService;
 import lombok.RequiredArgsConstructor;
@@ -75,5 +73,17 @@ public class CommunityController {
     public ResponseEntity<Long> getLikesByPost(@PathVariable(name = "id") Long id) {
         Long likes = communityService.getLikesByPost(id);
         return ResponseEntity.ok(likes);
+    }
+
+    // 게시글 좋아요 취소
+    @DeleteMapping("/delete-like/{id}")
+    public ResponseEntity<String> deleteLike(@RequestHeader(name = "Authorization") String token,
+                                             @PathVariable(name = "id") Long postId) {
+        boolean result = communityService.deleteLike(token, postId);
+        if (!result) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("좋아요를 누르지 않은 게시글입니다.");
+        }
+
+        return ResponseEntity.ok("좋아요가 취소되었습니다.");
     }
 }

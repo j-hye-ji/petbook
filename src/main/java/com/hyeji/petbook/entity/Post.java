@@ -38,4 +38,10 @@ public class Post extends TimeStamped {
     public void incrementLikesCount() {
         this.likesCount++;
     }
+
+    public void decrementLikesCount() {
+        if (this.likesCount > 0) {
+            this.likesCount--;
+        }
+    }
 }

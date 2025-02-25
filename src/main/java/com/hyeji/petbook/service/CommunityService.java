@@ -117,4 +117,28 @@ public class CommunityService {
 
         return likeCount;
     }
+
+    public boolean deleteLike(String token, Long postId) {
+        Long userId = jwtTokenUtil.getUserIdFromToken(token);
+
+        String userLikeKey = String.format(USER_LIKE_KEY, userId, postId);
+        Boolean alreadyLiked = redisTemplate.hasKey(userLikeKey);
+
+        if (!alreadyLiked) {
+            return false;
+        }
+
+        // 게시글 좋아요 수 감소 (Redis)
+        redisTemplate.opsForValue().decrement(String.format(POST_LIKE_COUNT_KEY, postId), 1);
+
+        /* 해당 사용자가 게시글에 대해 좋아요를 누른 기록이 Redis에서 제거 */
+        redisTemplate.delete(userLikeKey);
+
+        // 게시글 좋아요 수 감소 (DB)
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+        post.decrementLikesCount();
+        postRepository.save(post);
+
+        return true;
+    }
 }
