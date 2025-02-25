@@ -22,7 +22,9 @@ public class Post extends TimeStamped {
 
     private String title;
     private String contents;
-    private int likesCount;  // 좋아요 개수
+
+    @Column(nullable = false)
+    private int likesCount = 0;  // 좋아요 개수
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -31,4 +33,9 @@ public class Post extends TimeStamped {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments; // 댓글들
+
+    // 게시글에 대한 좋아요 수가 증가할 때마다 DB에서 업데이트
+    public void incrementLikesCount() {
+        this.likesCount++;
+    }
 }

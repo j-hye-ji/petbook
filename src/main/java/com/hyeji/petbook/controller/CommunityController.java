@@ -1,6 +1,8 @@
 package com.hyeji.petbook.controller;
 
+import com.hyeji.petbook.dto.CommentRequestDTO;
 import com.hyeji.petbook.dto.PostDTO;
+import com.hyeji.petbook.entity.Comment;
 import com.hyeji.petbook.entity.Post;
 import com.hyeji.petbook.service.CommunityService;
 import lombok.RequiredArgsConstructor;
@@ -10,15 +12,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "Authorization")
 @RestController
-@RequestMapping("/api/posts")
+@RequestMapping("/api/community")
 @RequiredArgsConstructor
 public class CommunityController {
 
     private final CommunityService communityService;
 
     // 게시글 작성
-    @PostMapping("/create")
+    @PostMapping("/create-post")
     public ResponseEntity<String> createPost(@RequestHeader(name = "Authorization") String token,
                                              @RequestBody PostDTO postDTO) {
         String message = communityService.createPost(token, postDTO);
@@ -26,14 +29,14 @@ public class CommunityController {
     }
 
     // 모든 게시글 조회
-    @GetMapping("/")
+    @GetMapping("/posts")
     public ResponseEntity<List<Post>> getAllPosts() {
         List<Post> allPosts = communityService.getAllPosts();
         return ResponseEntity.ok(allPosts);
     }
 
     // 게시글 수정
-    @PutMapping("/update/{id}")
+    @PutMapping("/update-post/{id}")
     public ResponseEntity<String> updatePost(@PathVariable(name = "id") Long id, @RequestBody PostDTO postDTO) {
         Post post = communityService.updatePost(id, postDTO);
 
@@ -48,7 +51,7 @@ public class CommunityController {
     }
 
     // 게시글 삭제
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete-post/{id}")
     public ResponseEntity<String> deletePost(@PathVariable(name = "id") Long id) {
         boolean post = communityService.deletePost(id);
 
@@ -57,5 +60,20 @@ public class CommunityController {
         }
 
         return ResponseEntity.ok("게시글이 삭제되었습니다.");
+    }
+
+    // 게시글 좋아요
+    @PostMapping("/add-like/{id}")
+    public ResponseEntity<String> addLike(@RequestHeader(name = "Authorization") String token,
+                                          @PathVariable(name = "id") Long postId) {
+        communityService.addLike(token, postId);
+        return ResponseEntity.ok("좋아요가 추가되었습니다.");
+    }
+
+    // 해당 게시글의 좋아요 개수 조회
+    @GetMapping("/likes/{id}")
+    public ResponseEntity<Long> getLikesByPost(@PathVariable(name = "id") Long id) {
+        Long likes = communityService.getLikesByPost(id);
+        return ResponseEntity.ok(likes);
     }
 }
