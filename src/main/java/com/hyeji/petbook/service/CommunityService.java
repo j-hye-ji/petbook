@@ -1,8 +1,11 @@
 package com.hyeji.petbook.service;
 
+import com.hyeji.petbook.dto.CommentDTO;
 import com.hyeji.petbook.dto.PostDTO;
+import com.hyeji.petbook.entity.Comment;
 import com.hyeji.petbook.entity.Post;
 import com.hyeji.petbook.entity.User;
+import com.hyeji.petbook.repository.CommentRepository;
 import com.hyeji.petbook.repository.PostRepository;
 import com.hyeji.petbook.repository.UserRepository;
 import com.hyeji.petbook.util.JwtTokenUtil;
@@ -22,6 +25,7 @@ public class CommunityService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -118,6 +122,7 @@ public class CommunityService {
         return likeCount;
     }
 
+    // 게시글 좋아요 취소
     public boolean deleteLike(String token, Long postId) {
         Long userId = jwtTokenUtil.getUserIdFromToken(token);
 
@@ -140,5 +145,41 @@ public class CommunityService {
         postRepository.save(post);
 
         return true;
+    }
+
+    // 댓글 작성
+    public String createComment(String token, CommentDTO commentDTO) {
+        String email = jwtTokenUtil.getClaimsFromToken(token).getSubject();
+
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        Post post = postRepository.findById(commentDTO.getPostId())
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+
+        Comment comment = new Comment();
+        comment.setPost(post);
+        comment.setUser(user);
+        comment.setContent(commentDTO.getContent());
+
+        commentRepository.save(comment);
+
+        return "댓글이 작성되었습니다.";
+    }
+
+    // 댓글 수정
+    public Comment updateComment(String token, Long commentId, CommentDTO commentDTO) {
+        String email = jwtTokenUtil.getClaimsFromToken(token).getSubject();
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+
+        // 댓글 작성자와 동일한지 확인
+        if (!comment.getUser().getEmail().equals(email)) {
+            throw new IllegalArgumentException("댓글을 수정할 수 없습니다.");
+        }
+
+        comment.setContent(commentDTO.getContent());
+
+        commentRepository.save(comment);
+
+        return comment;
     }
 }

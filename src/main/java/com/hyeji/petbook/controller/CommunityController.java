@@ -1,6 +1,8 @@
 package com.hyeji.petbook.controller;
 
+import com.hyeji.petbook.dto.CommentDTO;
 import com.hyeji.petbook.dto.PostDTO;
+import com.hyeji.petbook.entity.Comment;
 import com.hyeji.petbook.entity.Post;
 import com.hyeji.petbook.service.CommunityService;
 import lombok.RequiredArgsConstructor;
@@ -85,5 +87,28 @@ public class CommunityController {
         }
 
         return ResponseEntity.ok("좋아요가 취소되었습니다.");
+    }
+
+    // 댓글 작성
+    @PostMapping("/create-comment")
+    public ResponseEntity<String> createComment(@RequestHeader(name = "Authorization") String token,
+                                                @RequestBody CommentDTO commentDTO) {
+        String message = communityService.createComment(token, commentDTO);
+        return ResponseEntity.ok(message);
+    }
+
+    // 댓글 수정
+    @PutMapping("/update-comment/{id}")
+    public ResponseEntity<String> updateComment(@RequestHeader(name = "Authorization") String token,
+                                                @PathVariable(name = "id") Long commentId,
+                                                @RequestBody CommentDTO commentDTO) {
+        Comment comment = communityService.updateComment(token, commentId, commentDTO);
+        if (comment == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String responseMessage = String.format("댓글 수정: %s", comment.getContent());
+
+        return ResponseEntity.ok(responseMessage);
     }
 }
