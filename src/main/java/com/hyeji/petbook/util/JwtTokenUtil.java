@@ -59,6 +59,30 @@ public class JwtTokenUtil {
         }
     }
 
+    public Long getUserIdFromToken(String token) {
+        try {
+            if (token.startsWith("Bearer ")) {
+                token = token.substring(7); // "Bearer " 제거
+            }
+            token = token.replaceAll("\\s", ""); // 공백 제거
+
+            // JWT 토큰 파싱
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSecretKey()) // 비밀 키로 서명 검증
+                    .build()
+                    .parseClaimsJws(token) // 토큰 파싱
+                    .getBody()
+                    .get("userId", Long.class);  // claim에서 userId 추출
+        } catch (JwtException e) {
+            System.err.println("JWT 토큰 파싱 오류: " + e.getMessage());  // 로그 추가
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다."); // 예외 던지기
+        } catch (IllegalArgumentException e) {
+            System.err.println("토큰 처리 오류: " + e.getMessage());  // 로그 추가
+            throw new IllegalArgumentException("토큰 형식이 잘못되었습니다."); // 예외 던지기
+        }
+    }
+
+
     // JWT 토큰이 만료되었는지 확인
     public boolean isTokenExpired(String token) {
         Date expiration = Jwts.parserBuilder()
@@ -70,10 +94,9 @@ public class JwtTokenUtil {
         return expiration.before(new Date());  // 만료 여부 체크
     }
 
-    // JWT 토큰 검증 (유효성 검사)
-    public boolean validateToken(String token, User user) {
+    public boolean validateToken(String token) {
         String username = getUsernameFromToken(token);
-        return (username != null && username.equals(user.getEmail()) && !isTokenExpired(token));  // 이메일 비교와 만료 여부 확인
+        return (username != null && !isTokenExpired(token));  // 이메일 비교와 만료 여부 확인
     }
 
     // JWT 토큰에서 Claims 정보 추출
