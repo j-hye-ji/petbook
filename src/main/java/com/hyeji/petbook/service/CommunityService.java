@@ -1,5 +1,6 @@
 package com.hyeji.petbook.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hyeji.petbook.dto.CommentDTO;
 import com.hyeji.petbook.dto.PostDTO;
 import com.hyeji.petbook.entity.Comment;
@@ -181,5 +182,31 @@ public class CommunityService {
         commentRepository.save(comment);
 
         return comment;
+    }
+
+    // 댓글 조회
+    public List<Comment> getCommentsByPost(Long postId) {
+        return commentRepository.findAllById(postId);
+    }
+
+    // 댓글 삭제
+    public boolean deleteComment(String token, Long postId, Long commentId) {
+        String email = jwtTokenUtil.getClaimsFromToken(token).getSubject();
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글입니다."));
+
+        // 해당 게시글의 댓글이 맞는지 확인
+        if (!comment.getPost().getId().equals(postId)) {
+            return false;
+        }
+
+        // 댓글 작성자가 동일한지 확인
+        if (!comment.getUser().getEmail().equals(email)) {
+            return false;
+        }
+
+        commentRepository.delete(comment);
+
+        return true;
     }
 }

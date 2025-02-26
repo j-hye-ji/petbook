@@ -111,4 +111,24 @@ public class CommunityController {
 
         return ResponseEntity.ok(responseMessage);
     }
+
+    // 댓글 조회
+    @GetMapping("/comments/{id}")
+    public ResponseEntity<List<Comment>> getCommentsByPost(@PathVariable(name = "id") Long postId) {
+        List<Comment> comments = communityService.getCommentsByPost(postId);
+        return ResponseEntity.ok(comments);
+    }
+
+    // 댓글 삭제
+    @DeleteMapping("/delete-comment/{id}")
+    public ResponseEntity<String> deleteComment(@RequestHeader(name = "Authorization") String token,
+                                                @PathVariable(name = "id") Long postId,
+                                                @RequestBody Long commentId) {
+        boolean result = communityService.deleteComment(token, postId, commentId);
+        if (!result) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 게시글의 댓글이 아니거나 댓글 삭제 권한이 없습니다.");
+        }
+
+        return ResponseEntity.ok("댓글이 삭제되었습니다.");
+    }
 }
