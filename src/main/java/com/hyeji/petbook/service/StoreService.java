@@ -7,7 +7,6 @@ import com.hyeji.petbook.entity.User;
 import com.hyeji.petbook.repository.StoreRepository;
 import com.hyeji.petbook.repository.StoreReservationTimeRepository;
 import com.hyeji.petbook.repository.UserRepository;
-import com.hyeji.petbook.type.UserRole;
 import com.hyeji.petbook.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
