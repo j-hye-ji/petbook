@@ -1,7 +1,7 @@
 package com.hyeji.petbook.service;
 
 import com.hyeji.petbook.entity.Post;
-import com.hyeji.petbook.entity.PostDocument;
+import com.hyeji.petbook.document.PostDocument;
 import com.hyeji.petbook.repository.PostRepository;
 import com.hyeji.petbook.repository.PostSearchRepository;
 import lombok.RequiredArgsConstructor;

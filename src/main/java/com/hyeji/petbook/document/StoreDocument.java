@@ -1,4 +1,4 @@
-package com.hyeji.petbook.entity;
+package com.hyeji.petbook.document;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

@@ -1,6 +1,6 @@
 package com.hyeji.petbook.repository;
 
-import com.hyeji.petbook.entity.StoreDocument;
+import com.hyeji.petbook.document.StoreDocument;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
 

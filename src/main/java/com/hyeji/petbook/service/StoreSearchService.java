@@ -1,7 +1,7 @@
 package com.hyeji.petbook.service;
 
 import com.hyeji.petbook.entity.Store;
-import com.hyeji.petbook.entity.StoreDocument;
+import com.hyeji.petbook.document.StoreDocument;
 import com.hyeji.petbook.repository.StoreRepository;
 import com.hyeji.petbook.repository.StoreSearchRepository;
 import lombok.RequiredArgsConstructor;
