@@ -1,6 +1,5 @@
 package com.hyeji.petbook.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hyeji.petbook.dto.CommentDTO;
 import com.hyeji.petbook.dto.PostDTO;
 import com.hyeji.petbook.entity.Comment;
@@ -187,6 +186,11 @@ public class CommunityService {
     // 댓글 조회
     public List<Comment> getCommentsByPost(Long postId) {
         return commentRepository.findAllById(postId);
+    }
+
+    /* 게시글의 댓글 리스트 조회 (Join Fetch 사용 JPQL 추가) */
+    public List<Comment> getCommentsByPostJPQL(Long postId) {
+        return commentRepository.findByPostId(postId);
     }
 
     // 댓글 삭제

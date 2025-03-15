@@ -119,6 +119,12 @@ public class CommunityController {
         return ResponseEntity.ok(comments);
     }
 
+    @GetMapping("/comments/{id}")
+    public ResponseEntity<List<Comment>> getCommentsByPostJPQL(@PathVariable(name = "id") Long postId) {
+        List<Comment> comments = communityService.getCommentsByPostJPQL(postId);
+        return ResponseEntity.ok(comments);
+    }
+
     // 댓글 삭제
     @DeleteMapping("/delete-comment/{id}")
     public ResponseEntity<String> deleteComment(@RequestHeader(name = "Authorization") String token,
