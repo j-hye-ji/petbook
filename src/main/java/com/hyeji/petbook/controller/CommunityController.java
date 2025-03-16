@@ -89,6 +89,13 @@ public class CommunityController {
         return ResponseEntity.ok("좋아요가 취소되었습니다.");
     }
 
+    // 인기 게시글 조회
+    @GetMapping("/popular-post")
+    public ResponseEntity<List<Post>> getPopularPosts() {
+        List<Post> popularPosts = communityService.getPopularPosts();
+        return ResponseEntity.ok(popularPosts);
+    }
+
     // 댓글 작성
     @PostMapping("/create-comment")
     public ResponseEntity<String> createComment(@RequestHeader(name = "Authorization") String token,
@@ -119,7 +126,7 @@ public class CommunityController {
         return ResponseEntity.ok(comments);
     }
 
-    @GetMapping("/comments/{id}")
+    @GetMapping("/comments-jpql/{id}")
     public ResponseEntity<List<Comment>> getCommentsByPostJPQL(@PathVariable(name = "id") Long postId) {
         List<Comment> comments = communityService.getCommentsByPostJPQL(postId);
         return ResponseEntity.ok(comments);

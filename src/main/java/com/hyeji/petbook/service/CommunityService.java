@@ -147,6 +147,11 @@ public class CommunityService {
         return true;
     }
 
+    // 인기 게시글 조회
+    public List<Post> getPopularPosts() {
+        return postRepository.findPopularPosts();
+    }
+
     // 댓글 작성
     public String createComment(String token, CommentDTO commentDTO) {
         String email = jwtTokenUtil.getClaimsFromToken(token).getSubject();
