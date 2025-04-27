@@ -2,9 +2,8 @@ package com.hyeji.petbook.controller;
 
 import com.hyeji.petbook.dto.StoreDTO;
 import com.hyeji.petbook.entity.Store;
-import com.hyeji.petbook.entity.StoreDocument;
 import com.hyeji.petbook.entity.StoreReservationTime;
-import com.hyeji.petbook.service.StoreSearchService;
+//import com.hyeji.petbook.service.StoreSearchService;
 import com.hyeji.petbook.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StoreController {
     private final StoreService storeService;
-    private final StoreSearchService storeSearchService;
+//    private final StoreSearchService storeSearchService;
 
     // UserRole: ADMIN
     // 매장 등록 (ADMIN만 가능)
@@ -57,13 +56,6 @@ public class StoreController {
     public ResponseEntity<List<Store>> getStore(@RequestParam @Valid String storeName) {
         List<Store> stores = storeService.getStore(storeName);
         return ResponseEntity.ok(stores);
-    }
-
-    // ElasticSearch로 검색 (키워드만으로도 가능)
-    @GetMapping("/keyword-store")
-    public ResponseEntity<List<StoreDocument>> searchStores(@RequestParam String keyword) {
-        List<StoreDocument> storeDocuments = storeSearchService.searchStores(keyword);
-        return ResponseEntity.ok(storeDocuments);
     }
 
 //    // 매장 정보 수정
@@ -111,9 +103,9 @@ public class StoreController {
     }
 
     /* MySQL 데이터 -> ElasticSearch로 동기화 */
-    @PostMapping("/sync")
-    public String synchronizeMysqlToES() {
-        storeSearchService.synchronizeMysqlToES();
-        return "Elasticsearch 데이터 동기화 완료!";
-    }
+//    @PostMapping("/sync")
+//    public String synchronizeMysqlToES() {
+//        storeSearchService.synchronizeMysqlToES();
+//        return "Elasticsearch 데이터 동기화 완료!";
+//    }
 }
