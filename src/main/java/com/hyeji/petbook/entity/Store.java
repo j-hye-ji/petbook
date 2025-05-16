@@ -21,11 +21,20 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String storeName;
+
+    @Column(nullable = false)
     private String location;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
-    private LocalTime openingTime; // 매장 오픈 시간
-    private LocalTime closingTime; // 매장 마감 시간
+
+    @Column(nullable = false)
+    private LocalTime openingTime;
+
+    @Column(nullable = false)
+    private LocalTime closingTime;
 
     // 예약 가능 시간대 리스트
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
@@ -34,7 +43,7 @@ public class Store {
 
     // 관리자와 매장 간의 관계 (Many-to-One)
     @ManyToOne
-    @JoinColumn(name = "admin_id")
+    @JoinColumn(name = "admin_id", nullable = false)
     private User admin;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)

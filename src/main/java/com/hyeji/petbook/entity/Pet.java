@@ -15,15 +15,23 @@ public class Pet extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String petName;
+
+    @Column(nullable = false)
     private String type;
-    private String breed;
+
+    @Column(nullable = false)
     private LocalDate birthday;
+
+    @Column(nullable = false)
     private String gender;
+
+    @Column(nullable = false)
     private String healthStatus;
 
-    // 사용자와 반려동물 간의 관계 (Many-to-One)
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
 }

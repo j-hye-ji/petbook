@@ -20,16 +20,19 @@ public class Post extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String contents;
 
     @Column(nullable = false)
     private int likesCount = 0;  // 좋아요 개수
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
-    private User user;  // 글 작성자 (User 엔티티와 연결)
+    private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments; // 댓글들

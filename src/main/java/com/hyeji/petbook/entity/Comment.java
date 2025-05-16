@@ -20,15 +20,16 @@ public class Comment extends TimeStamped {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = false)
     @JsonIgnore
-    private Post post; // 어떤 게시글에 달린 댓글인지
+    private Post post;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
-    private User user; // 댓글 작성자
+    private User user;
 
+    @Column(nullable = false)
     @NotBlank(message = "댓글 내용은 필수입니다.")
     private String content;
 }

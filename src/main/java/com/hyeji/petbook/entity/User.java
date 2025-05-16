@@ -19,12 +19,20 @@ public class User extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String userName;
-    private String password;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private UserRole userRole = UserRole.USER;
 
     // 반려동물과의 관계 (1:N)
