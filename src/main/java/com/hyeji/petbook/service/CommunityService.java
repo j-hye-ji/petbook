@@ -1,5 +1,7 @@
 package com.hyeji.petbook.service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import com.hyeji.petbook.document.PostDocument;
 import com.hyeji.petbook.dto.CommentDTO;
 import com.hyeji.petbook.dto.PostDTO;
 import com.hyeji.petbook.entity.Comment;
@@ -9,10 +11,12 @@ import com.hyeji.petbook.repository.CommentRepository;
 import com.hyeji.petbook.repository.PostRepository;
 import com.hyeji.petbook.repository.UserRepository;
 import com.hyeji.petbook.util.JwtTokenUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +32,10 @@ public class CommunityService {
     private final CommentRepository commentRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ElasticsearchClient elasticsearchClient;
 
     // 게시글 작성
+    @Transactional
     public String createPost(String token, PostDTO postDTO) {
         String email = jwtTokenUtil.getClaimsFromToken(token).getSubject();
 
@@ -40,7 +46,18 @@ public class CommunityService {
         post.setTitle(postDTO.getTitle());
         post.setContents(postDTO.getContents());
 
-        postRepository.save(post);
+        Post savedPost = postRepository.save(post);
+
+        // ElasticSearch 색인
+        try {
+            elasticsearchClient.index(i -> i
+                    .index("post_index")
+                    .id(savedPost.getId().toString())
+                    .document(PostDocument.from(savedPost))
+            );
+        } catch (IOException e) {
+            throw new RuntimeException("Elasticsearch 색인 저장 실패", e);
+        }
 
         return "작성하신 글이 등록되었습니다.";
     }
