@@ -1,11 +1,11 @@
 package com.hyeji.petbook.document;
 
+import com.hyeji.petbook.entity.Post;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
 
-import static org.springframework.data.elasticsearch.annotations.FieldType.Text;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,14 +13,21 @@ import static org.springframework.data.elasticsearch.annotations.FieldType.Text;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(indexName = "post_index")
+@Builder
 public class PostDocument {
 
     @Id
     private String id;
-
-    @Field(type = Text)
     private String title;
-
-    @Field(type = Text)
     private String contents;
+    private LocalDateTime createAt;
+
+    public static PostDocument from(Post post) {
+        return PostDocument.builder()
+                .id(post.getId().toString())
+                .title(post.getTitle())
+                .contents(post.getContents())
+                .createAt(post.getCreatedAt())
+                .build();
+    }
 }
