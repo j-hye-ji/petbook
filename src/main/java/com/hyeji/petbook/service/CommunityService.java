@@ -68,6 +68,7 @@ public class CommunityService {
     }
 
     // 게시글 수정
+    @Transactional
     public Post updatePost(Long id, PostDTO postDTO) {
         Optional<Post> optPost = postRepository.findById(id);
         if (!optPost.isPresent()) {
@@ -84,17 +85,43 @@ public class CommunityService {
             updatePost.setContents(postDTO.getContents());
         }
 
-        return postRepository.save(updatePost);
+        postRepository.save(updatePost);
+
+        // ElasticSearch 색인
+        try {
+            elasticsearchClient.index(i -> i
+                    .index("post_index")
+                    .id(updatePost.getId().toString())
+                    .document(PostDocument.from(updatePost))
+            );
+        } catch (IOException e) {
+            throw new RuntimeException("Elasticsearch 색인 업데이트 실패", e);
+        }
+
+        return updatePost;
     }
 
     // 게시글 삭제
+    @Transactional
     public boolean deletePost(Long id) {
         Optional<Post> optPost = postRepository.findById(id);
         if (!optPost.isPresent()) {
             return false;
         }
 
-        postRepository.delete(optPost.get());
+        Post post = optPost.get();
+
+        // ElasticSearch 색인 제거
+        try {
+            elasticsearchClient.delete(d -> d
+                    .index("post_index")
+                    .id(post.getId().toString())
+            );
+        } catch (IOException e) {
+            throw new RuntimeException("Elasticsearch 색인 삭제 실패", e);
+        }
+
+        postRepository.delete(post);
 
         return true;
     }
