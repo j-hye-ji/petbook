@@ -1,6 +1,7 @@
 package com.hyeji.petbook.repository;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
@@ -33,6 +34,12 @@ public class PostSearchRepositoryImpl implements PostSearchRepositoryCustom {
                                             .fields("title", "contents")
                                             .query(request.getKeyword())
                                             .type(TextQueryType.BestFields)
+                                    )
+                            )
+                            .sort(sort -> sort
+                                    .field(f -> f
+                                            .field("createdAt")
+                                            .order(SortOrder.Desc) // 최신순 정렬
                                     )
                             ),
                     PostDocument.class);

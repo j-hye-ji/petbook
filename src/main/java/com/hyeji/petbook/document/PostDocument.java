@@ -20,14 +20,14 @@ public class PostDocument {
     private String id;
     private String title;
     private String contents;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     public static PostDocument from(Post post) {
         return PostDocument.builder()
                 .id(post.getId().toString())
                 .title(post.getTitle())
                 .contents(post.getContents())
-                .createAt(post.getCreatedAt())
+                .createdAt(post.getCreatedAt())
                 .build();
     }
 }
